@@ -1,6 +1,6 @@
 VERSION         := 0.2.0
 TARGET          := $(shell uname -r)
-DKMS_ROOT_PATH  := /usr/src/zenpower-$(VERSION)
+DKMS_ROOT_PATH  := /usr/src/zenstats-$(VERSION)
 
 KBUILD_CFLAGS   += -Wimplicit-fallthrough=3
 
@@ -18,8 +18,8 @@ KERNEL_BUILD	:= $(KERNEL_MODULES)/build
 endif
 endif
 
-obj-m	:= $(patsubst %,%.o,zenpower)
-obj-ko	:= $(patsubst %,%.ko,zenpower)
+obj-m	:= $(patsubst %,%.o,zenstats)
+obj-ko	:= $(patsubst %,%.ko,zenstats)
 
 .PHONY: all modules clean dkms-install dkms-install-swapped dkms-uninstall
 
@@ -36,16 +36,16 @@ dkms-install:
 	mkdir -p $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/zenpower.c $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/zenstats.c $(DKMS_ROOT_PATH)
 
 	sed -e "s/@CFLGS@/${MCFLAGS}/" \
 	    -e "s/@VERSION@/$(VERSION)/" \
 	    -i $(DKMS_ROOT_PATH)/dkms.conf
 
-	dkms add zenpower/$(VERSION)
-	dkms build zenpower/$(VERSION)
-	dkms install zenpower/$(VERSION)
+	dkms add zenstats/$(VERSION)
+	dkms build zenstats/$(VERSION)
+	dkms install zenstats/$(VERSION)
 
 dkms-uninstall:
-	dkms remove zenpower/$(VERSION) --all
+	dkms remove zenstats/$(VERSION) --all
 	rm -rf $(DKMS_ROOT_PATH)
